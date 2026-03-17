@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Vk7s</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background: #000000;
+            color: rgb(70, 100, 200);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(39, 56, 112, 0.15) 0%, rgba(0,0,0,1) 70%);
+            z-index: 0;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        .container {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 60px 40px;
+            border-radius: 50px;
+            text-align: center;
+            width: 380px;
+            z-index: 10;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        h1 { 
+            font-size: 2.2rem; 
+            margin-bottom: 40px; 
+            font-weight: 200; 
+            letter-spacing: 12px; 
+            text-shadow: 0 0 20px rgba(39, 56, 112, 0.8);
+            color: #fff;
+        }
+
+        .links { display: flex; flex-direction: column; gap: 18px; }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.4);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .instagram:hover { border-color: #E1306C; color: #fff; box-shadow: 0 0 30px rgba(225, 48, 108, 0.2); transform: translateY(-3px); }
+        .tiktok:hover { border-color: #ca919d; color: #fff; box-shadow: 0 0 30px rgba(202, 145, 157, 0.2); transform: translateY(-3px); }
+        .discord:hover { border-color: #5865F2; color: #fff; box-shadow: 0 0 30px rgba(88, 101, 242, 0.2); transform: translateY(-3px); }
+
+        .footer-credits {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: rgba(39, 56, 112, 0.4);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .footer-credits:hover { color: #fff; text-shadow: 0 0 10px #fff; }
+
+        /* Widget Spotify com Volume */
+        .spotify-widget {
+            position: absolute;
+            bottom: 30px; right: 30px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 15px 25px;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid rgba(39, 56, 112, 0.3); 
+            z-index: 20;
+            min-width: 200px;
+        }
+
+        .spotify-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .spotify-info { display: flex; align-items: center; gap: 10px; }
+        .spotify-info i { color: #1DB954; font-size: 1.1rem; }
+        .track-name { font-size: 0.75rem; color: #fff; letter-spacing: 1px; }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .volume-container i { font-size: 0.7rem; color: rgba(39, 56, 112, 0.8); }
+
+        /* Estilização da Barra de Volume */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]:focus { outline: none; }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 12px; width: 12px;
+            border-radius: 50%;
+            background: #4664ff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+            box-shadow: 0 0 10px rgba(70, 100, 255, 0.5);
+        }
+
+        #copy-toast {
+            position: fixed;
+            top: -100px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(39, 56, 112, 0.9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            z-index: 100;
+            transition: 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+        #copy-toast.show { top: 30px; }
+    </style>
+</head>
+<body>
+
+    <div id="copy-toast">Discord copiado: itoraphael</div>
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="container">
+        <h1>Vk7s</h1>
+        <div class="links">
+            <a href="https://www.instagram.com/off.f26k/" target="_blank" class="link-card instagram"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://www.tiktok.com/@ferreira_25k____" target="_blank" class="link-card tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="javascript:void(0)" onclick="copyDiscord()" class="link-card discord"><i class="fab fa-discord"></i> Discord</a>
+        </div>
+    </div>
+
+    <a href="https://www.instagram.com/knt26k/" target="_blank" class="footer-credits">FEITO POR @KNT26K</a>
+
+    <div class="spotify-widget">
+        <div class="spotify-main">
+            <div class="spotify-info">
+                <i class="fab fa-spotify"></i>
+                <span class="track-name">Sorteando...</span>
+            </div>
+            <i class="fas fa-pause" id="playBtn" style="cursor:pointer; font-size:0.8rem;" onclick="togglePlay()"></i>
+        </div>
+        <div class="volume-container">
+            <i class="fas fa-volume-down"></i>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.2">
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop></audio>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playBtn');
+        const trackNameDisplay = document.querySelector('.track-name');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        const playlist = [
+            { src: 'musica1.mp3', name: 'Do To Me' },
+            { src: 'musica2.mp3', name: 'World Hold On' }
+        ];
+
+        const randomTrack = playlist[Math.floor(Math.random() * playlist.length)];
+        audio.src = randomTrack.src;
+        trackNameDisplay.innerText = randomTrack.name;
+
+        // Configuração inicial do volume (20%)
+        audio.volume = 0.2;
+
+        // Atualizar volume quando mexer na barrinha
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        const startAudio = () => {
+            audio.play().then(() => {
+                playBtn.className = 'fas fa-pause';
+                window.removeEventListener('click', startAudio);
+                window.removeEventListener('mousemove', startAudio);
+            }).catch(() => {});
+        };
+
+        window.addEventListener('click', startAudio);
+        window.addEventListener('mousemove', startAudio, { once: true });
+
+        function togglePlay() {
+            if (audio.paused) { audio.play(); playBtn.className = 'fas fa-pause'; }
+            else { audio.pause(); playBtn.className = 'fas fa-play'; }
+        }
+
+        function copyDiscord() {
+            navigator.clipboard.writeText("itoraphael");
+            const toast = document.getElementById('copy-toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Animação do Fundo
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.3 + 0.1,
+                    color: Math.random() > 0.5 ? 'rgba(70, 100, 255, 0.5)' : 'rgba(255, 255, 255, 0.3)'
+                });
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                p.y -= p.speed;
+                if (p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init(); animate();
+    </script>
+</body>
+</html>
