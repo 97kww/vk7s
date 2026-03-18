@@ -3,282 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil | Vk7s</title>
+    <title>Perfil | VkBoyzão</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
+
+
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background: #000000;
-            color: rgb(70, 100, 200);
+            background: #000;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             overflow: hidden;
             position: relative;
+        }
+
+        /* TELA DE INÍCIO COM DESFOQUE */
+        #entry-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        #entry-overlay h2 {
+            color: #fff;
+            font-weight: 200;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.3; transform: scale(0.98); }
+        }
+
+        .bg-animated {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(45deg, #000000, #853a3a, #4e3a3a, #201e1e);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         body::before {
             content: "";
             position: absolute;
             width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(39, 56, 112, 0.15) 0%, rgba(0,0,0,1) 70%);
-            z-index: 0;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.05) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+            pointer-events: none;
         }
 
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
-        .container {
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 60px 40px;
-            border-radius: 50px;
-            text-align: center;
-            width: 380px;
-            z-index: 10;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
-            animation: fadeIn 1.5s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        h1 { 
-            font-size: 2.2rem; 
-            margin-bottom: 40px; 
-            font-weight: 200; 
-            letter-spacing: 12px; 
-            text-shadow: 0 0 20px rgba(39, 56, 112, 0.8);
-            color: #fff;
-        }
-
-        .links { display: flex; flex-direction: column; gap: 18px; }
-
-        .link-card {
+        .profile-card {
             background: rgba(255, 255, 255, 0.02);
-            padding: 18px;
-            border-radius: 20px;
-            text-decoration: none;
-            color: rgba(255,255,255,0.4);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            padding: 50px 25px;
+            width: 360px;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .avatar {
+            width: 105px; height: 105px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            object-fit: cover;
+        }
+
+        h1 { color: #fff; font-weight: 200; font-size: 2rem; letter-spacing: 6px; margin-bottom: 35px; }
+
+        .discord-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 15px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: 0.4s;
+            margin-bottom: 40px;
         }
 
-        .instagram:hover { border-color: #E1306C; color: #fff; box-shadow: 0 0 30px rgba(225, 48, 108, 0.2); transform: translateY(-3px); }
-        .tiktok:hover { border-color: #ca919d; color: #fff; box-shadow: 0 0 30px rgba(202, 145, 157, 0.2); transform: translateY(-3px); }
-        .discord:hover { border-color: #5865F2; color: #fff; box-shadow: 0 0 30px rgba(88, 101, 242, 0.2); transform: translateY(-3px); }
+        .discord-pill img { width: 38px; height: 38px; border-radius: 50%; }
+        .discord-txt { text-align: left; }
+        .discord-txt b { color: #ffffff; font-size: 0.85rem; display: block; }
+        .discord-txt span { color: rgba(255,255,255,0.25); font-size: 0.65rem; text-transform: uppercase; }
 
-        .footer-credits {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            color: rgba(39, 56, 112, 0.4);
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .footer-credits:hover { color: #fff; text-shadow: 0 0 10px #fff; }
+        .icon-container { display: flex; justify-content: center; gap: 22px; }
+        .icon-link { color: #fff; opacity: 0.4; transition: 0.3s; font-size: 1.6rem; text-decoration: none; }
+        .icon-link:hover { opacity: 1; transform: translateY(-3px); }
 
-        /* Widget Spotify com Volume */
-        .spotify-widget {
-            position: absolute;
-            bottom: 30px; right: 30px;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 15px 25px;
-            border-radius: 30px;
+        .spotify-mini {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(35, 252, 15, 0.1);
+            border-radius: 16px;
+            padding: 12px;
+            width: 280px;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            border: 1px solid rgba(39, 56, 112, 0.3); 
-            z-index: 20;
-            min-width: 200px;
         }
 
-        .spotify-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
+        .mini-info { display: flex; align-items: center; gap: 10px; }
+        .mini-img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; }
+        .mini-text b { color: #ffffff; font-size: 0.8rem; display: block; }
+        .mini-text span { color: #7e7d7d; font-size: 0.7rem; }
+
+        .mini-controls { display: flex; align-items: center; justify-content: space-between; }
+        .control-btns { display: flex; gap: 15px; color: #0cdf1d; align-items: center; }
+        .btn { cursor: pointer; opacity: 0.7; transition: 0.2s; }
+        .btn:hover { opacity: 1; }
+        
+        .vol-box { display: flex; align-items: center; gap: 8px; width: 80px; }
+        .vol-slider { width: 100%; height: 3px; cursor: pointer; accent-color: #2cd30a; }
+
+        #toast {
+            position: fixed; bottom: 40px; background: rgba(255,255,255,0.1);
+            color: #fff; padding: 10px 20px; border-radius: 50px; opacity: 0; transition: 0.5s;
+            left: 50%; transform: translateX(-50%); z-index: 100; font-size: 0.8rem;
         }
-
-        .spotify-info { display: flex; align-items: center; gap: 10px; }
-        .spotify-info i { color: #1DB954; font-size: 1.1rem; }
-        .track-name { font-size: 0.75rem; color: #fff; letter-spacing: 1px; }
-
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .volume-container i { font-size: 0.7rem; color: rgba(39, 56, 112, 0.8); }
-
-        /* Estilização da Barra de Volume */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-
-        input[type=range]:focus { outline: none; }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            height: 12px; width: 12px;
-            border-radius: 50%;
-            background: #4664ff;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -4px;
-            box-shadow: 0 0 10px rgba(70, 100, 255, 0.5);
-        }
-
-        #copy-toast {
-            position: fixed;
-            top: -100px; left: 50%;
-            transform: translateX(-50%);
-            background: rgba(39, 56, 112, 0.9);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            z-index: 100;
-            transition: 0.5s ease;
-            backdrop-filter: blur(10px);
-        }
-        #copy-toast.show { top: 30px; }
     </style>
 </head>
 <body>
 
-    <div id="copy-toast">Discord copiado: itoraphael</div>
-    <canvas id="bgCanvas"></canvas>
+    <div id="entry-overlay" onclick="startExperience()">
+        <h2>Clique para iniciar</h2>
+    </div>
 
-    <div class="container">
-        <h1>Vk7s</h1>
-        <div class="links">
-            <a href="https://www.instagram.com/off.f26k/" target="_blank" class="link-card instagram"><i class="fab fa-instagram"></i> Instagram</a>
-            <a href="https://www.tiktok.com/@ferreira_25k____" target="_blank" class="link-card tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
-            <a href="javascript:void(0)" onclick="copyDiscord()" class="link-card discord"><i class="fab fa-discord"></i> Discord</a>
+    <div class="bg-animated"></div>
+
+    <div class="profile-card">
+        <img src="c:\Users\kauan\OneDrive\Documentos\site\508288840_715589637869740_4297836292864773367_n.jpg" class="avatar">
+        <h1>VkBoyzão</h1>
+
+        <a href="https://www.instagram.com/knt26k" target="_blank" class="discord-pill" style="text-decoration: none; color: inherit;">
+    <img src="c:\Users\kauan\OneDrive\Documentos\site\643552299_17991298949925519_1700010042928631563_n.jpg">
+    <div class="discord-txt">
+        <b>Siga no Instagram</b>
+        <span>@knt26k</span>
+    </div>
+</a>
+
+        <div class="icon-container">
+            <a href="https://www.instagram.com/off.f26k/" target="_blank" class="icon-link"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@ferreira_25k____" target="_blank" class="icon-link"><i class="fab fa-tiktok"></i></a>
+            <a href="javascript:void(0)" onclick="copyDiscord()" class="icon-link"><i class="fab fa-discord"></i></a>
+            <a href="https://www.roblox.com/users/9482967866/profile" target="_blank" class="icon-link">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" style="width:22px; filter:invert(1)">
+            </a>
         </div>
     </div>
 
-    <a href="https://www.instagram.com/knt26k/" target="_blank" class="footer-credits">FEITO POR @KNT26K</a>
-
-    <div class="spotify-widget">
-        <div class="spotify-main">
-            <div class="spotify-info">
-                <i class="fab fa-spotify"></i>
-                <span class="track-name">Sorteando...</span>
+    <div class="spotify-mini">
+        <div class="mini-info">
+            <img src="Spotify-Logo-Transparent-File.webp" class="mini-img">
+            <div class="mini-text">
+                <b id="m-title">Música 1</b>
+                <span>KnRichBoy Playlist</span>
             </div>
-            <i class="fas fa-pause" id="playBtn" style="cursor:pointer; font-size:0.8rem;" onclick="togglePlay()"></i>
         </div>
-        <div class="volume-container">
-            <i class="fas fa-volume-down"></i>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.2">
+        <div class="mini-controls">
+            <div class="control-btns">
+                <i class="fas fa-step-backward btn" onclick="prev()"></i>
+                <i class="fas fa-play btn" id="p-icon" onclick="toggle()"></i>
+                <i class="fas fa-step-forward btn" onclick="next()"></i>
+            </div>
+            <div class="vol-box">
+                <i class="fas fa-volume-down" style="color:#fff; font-size:0.7rem"></i>
+                <input type="range" class="vol-slider" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)">
+            </div>
         </div>
     </div>
 
-    <audio id="bgMusic" loop></audio>
+    <div id="toast">Discord copiado</div>
+    <audio id="player"></audio>
 
     <script>
-        const audio = document.getElementById('bgMusic');
-        const playBtn = document.getElementById('playBtn');
-        const trackNameDisplay = document.querySelector('.track-name');
-        const volumeSlider = document.getElementById('volumeSlider');
+        const audio = document.getElementById('player');
+        const pIcon = document.getElementById('p-icon');
+        const mTitle = document.getElementById('m-title');
+        let index = 0;
 
-        const playlist = [
-            { src: 'musica1.mp3', name: 'Do To Me' },
-            { src: 'musica2.mp3', name: 'World Hold On' }
+        const songs = [
+            { n: "DIÁRIO DE UM CAFAJESTE", f: "diario de um cafajeste.mp3" }
+            
         ];
 
-        const randomTrack = playlist[Math.floor(Math.random() * playlist.length)];
-        audio.src = randomTrack.src;
-        trackNameDisplay.innerText = randomTrack.name;
+        function load(i) {
+            audio.src = songs[i].f;
+            mTitle.innerText = songs[i].n;
+        }
 
-        // Configuração inicial do volume (20%)
-        audio.volume = 0.2;
+        // FUNÇÃO PARA INICIAR O SITE E DESBORRAR
+        function startExperience() {
+            const overlay = document.getElementById('entry-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.visibility = 'hidden';
+            }, 800);
 
-        // Atualizar volume quando mexer na barrinha
-        volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value;
-        });
-
-        const startAudio = () => {
+            // Inicia a música
+            load(0);
             audio.play().then(() => {
-                playBtn.className = 'fas fa-pause';
-                window.removeEventListener('click', startAudio);
-                window.removeEventListener('mousemove', startAudio);
-            }).catch(() => {});
-        };
-
-        window.addEventListener('click', startAudio);
-        window.addEventListener('mousemove', startAudio, { once: true });
-
-        function togglePlay() {
-            if (audio.paused) { audio.play(); playBtn.className = 'fas fa-pause'; }
-            else { audio.pause(); playBtn.className = 'fas fa-play'; }
+                pIcon.className = "fas fa-pause btn";
+            }).catch(e => console.log("Erro ao tocar:", e));
         }
 
-        function copyDiscord() {
-            navigator.clipboard.writeText("itoraphael");
-            const toast = document.getElementById('copy-toast');
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        // Animação do Fundo
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2,
-                    speed: Math.random() * 0.3 + 0.1,
-                    color: Math.random() > 0.5 ? 'rgba(70, 100, 255, 0.5)' : 'rgba(255, 255, 255, 0.3)'
+        function toggle() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    pIcon.className = "fas fa-pause btn";
+                }).catch(() => {
+                    alert("Clique em qualquer lugar da tela e tente o Play novamente!");
                 });
+            } else {
+                audio.pause();
+                pIcon.className = "fas fa-play btn";
             }
         }
 
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-                p.y -= p.speed;
-                if (p.y < 0) p.y = canvas.height;
-            });
-            requestAnimationFrame(animate);
+        function next() { 
+            index = (index + 1) % songs.length; 
+            load(index); 
+            audio.play(); 
+            pIcon.className = "fas fa-pause btn"; 
         }
 
-        window.addEventListener('resize', init);
-        init(); animate();
+        function prev() { 
+            index = (index - 1 + songs.length) % songs.length; 
+            load(index); 
+            audio.play(); 
+            pIcon.className = "fas fa-pause btn"; 
+        }
+
+        function setVol(v) { audio.volume = v; }
+
+        function copyDiscord() {
+            navigator.clipboard.writeText("itoraphael");
+            const t = document.getElementById('toast');
+            t.style.opacity = '1';
+            setTimeout(() => t.style.opacity = '0', 2000);
+        }
+
+        // Removi o load(0) automático aqui para ele ser chamado só no clique inicial
+        audio.volume = 0.5;
     </script>
 </body>
 </html>
